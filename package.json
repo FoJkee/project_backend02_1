@@ -19,7 +19,9 @@
   },
 
   "scripts": {
-    "dev": "nodemon --inspect dist/index.js",
-    "watch": "tsc -w"
+    "dev": "yarn nodemon --inspect dist/index.js",
+    "watch": "tsc -w",
+    "start": "node dist/index.js",
+    "build": "tsc"
   }
 }

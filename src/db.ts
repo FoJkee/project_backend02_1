@@ -13,8 +13,12 @@ if(!mongoUrl){
 
 const client = new MongoClient(mongoUrl)
 
-
 const db = client.db('network')
+
+export const postCollection = db.collection('posts')
+export const blogCollection = db.collection('blogs')
+
+
 
 export async function runDb() {
     try {
