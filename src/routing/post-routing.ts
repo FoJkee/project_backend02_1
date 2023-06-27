@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {repositoryPost} from "../repository/post-repository";
 import {QueryParamsPost} from "../types";
+import {postMiddleware} from "../middleware/post-middleware";
 
 
 export const postRouter = Router()

@@ -10,11 +10,12 @@ export const repositoryPost = {
         const filter: Filter<PostType> = {}
 
         const findForPost = await postCollection
-            .find({filter})
+            .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()
+
 
         const itemPost: PostIdType[] = findForPost.map(el => ({
             id: el._id.toString(),

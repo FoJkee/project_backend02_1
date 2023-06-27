@@ -37,12 +37,18 @@ export type QueryParamsBlog = {
 
 }
 
-
 export type QueryParamsPost = {
     pageNumber: number,
     pageSize: number,
     sortBy: string,
     sortDirection: string,
+}
+
+export type Auth = {
+    loginOrEmail: string,
+    password: string
+
+
 }
 
 
