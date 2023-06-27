@@ -1,22 +1,24 @@
-import {postRouter} from "../setting";
-import {Request, Response} from "express";
+import {Request, Response, Router} from "express";
 import {repositoryPost} from "../repository/post-repository";
+import {QueryParamsPost} from "../types";
 
 
+export const postRouter = Router()
+
+postRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsPost>, res: Response) => {
 
 
+    const postGet = await repositoryPost.findPost(
+        req.query.pageNumber ?? 1,
+        req.query.pageSize ?? 10,
+        req.query.sortBy ?? "createdAt",
+        req.query.sortDirection ?? "desc"
+    )
+    return res.status(200).json(postGet)
 
+})
 
-
-
-
-
-
-
-
-
-
-postRouter.post('/', async (res: Response, req: Request) => {
+postRouter.post('/', async (req: Request, res: Response) => {
 
     const postCreate = await repositoryPost.createPost(
         req.body.title,
@@ -29,7 +31,9 @@ postRouter.post('/', async (res: Response, req: Request) => {
 
 })
 
-postRouter.get('/:id', async (res: Response, req: Request) => {
+
+
+postRouter.get('/:id', async (req: Request, res: Response) => {
 
     const postGetId = repositoryPost.findPostId(req.params.id)
 
@@ -42,7 +46,7 @@ postRouter.get('/:id', async (res: Response, req: Request) => {
 
 })
 
-postRouter.put('/:id', async (res: Response, req: Request) => {
+postRouter.put('/:id', async (req: Request, res: Response) => {
 
     const postPutId = await repositoryPost.findPostId(req.params.id)
 
@@ -63,7 +67,7 @@ postRouter.put('/:id', async (res: Response, req: Request) => {
 
 })
 
-postRouter.delete('/:id', async (res: Response, req: Request) => {
+postRouter.delete('/:id', async (req: Request, res: Response) => {
 
     const postDeleteId = await repositoryPost.findPostId(req.params.id)
 

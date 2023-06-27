@@ -1,9 +1,10 @@
 import dotenv from "dotenv"
-import {MongoClient} from "mongodb";
+import {MongoClient, WithId} from "mongodb";
+import {BlogType, PostType} from "./types";
 
 dotenv.config()
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://127.0.0.1:27017"
+const mongoUrl = process.env.MONGO_URL || "mongodb://0.0.0.0:27017"
 
 console.log(mongoUrl)
 
@@ -15,8 +16,8 @@ const client = new MongoClient(mongoUrl)
 
 const db = client.db('network')
 
-export const postCollection = db.collection('posts')
-export const blogCollection = db.collection('blogs')
+export const postCollection = db.collection<WithId<PostType>>('posts')
+export const blogCollection = db.collection<WithId<BlogType>>('blogs')
 
 
 

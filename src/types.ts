@@ -32,23 +32,18 @@ export type QueryParamsBlog = {
     pageNumber: number,
     pageSize: number,
     sortBy: string,
-    sortDirection: "asc" | "desc",
+    sortDirection: string,
+    searchNameTerm: string | null
 
 }
-export type QueryParamsBlogView = QueryParamsBlog & { searchNameTerm: string | null }
+
 
 export type QueryParamsPost = {
     pageNumber: number,
     pageSize: number,
     sortBy: string,
-    sortDirection: "asc" | "desc",
+    sortDirection: string,
 }
 
-export type PaginatorPost = {
-    pageNumber: string,
-    pageSize: string,
-    sortBy: string,
-    sortDirection: "asc" | "desc",
-}
 
 

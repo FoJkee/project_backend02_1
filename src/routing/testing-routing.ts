@@ -1,7 +1,8 @@
-import {Response, Request} from "express";
-import {deleteRouter} from "../setting";
+import {Response, Request, Router} from "express";
 import {repositoryBlog} from "../repository/blog-repository";
 import {repositoryPost} from "../repository/post-repository";
+
+export const deleteRouter = Router()
 
 
 deleteRouter.delete('/all-data', async (req: Request, res: Response) => {

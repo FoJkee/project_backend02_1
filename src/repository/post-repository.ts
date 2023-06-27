@@ -1,16 +1,51 @@
-import {ObjectId, WithId} from "mongodb";
+import {Filter, ObjectId, WithId} from "mongodb";
 import {postCollection} from "../db";
-import {PostIdType, PostType} from "../types";
-import {postRouter} from "../setting";
+import {PaginatedType, PostIdType, PostType} from "../types";
 
 export const repositoryPost = {
 
+    async findPost(pageNumber: number, pageSize: number,
+                   sortBy: string, sortDirection: string): Promise<PaginatedType<PostIdType>>{
+
+        const filter: Filter<PostType> = {}
+
+        const findForPost = await postCollection
+            .find({filter})
+            .sort({[sortBy]: sortDirection = 'desc'})
+            .skip(pageSize * (pageNumber - 1))
+            .limit(pageSize)
+            .toArray()
+
+        const itemPost: PostIdType[] = findForPost.map(el => ({
+            id: el._id.toString(),
+            title: el.title,
+            shortDescription: el.shortDescription,
+            content: el.content,
+            blogId: el.blogId,
+            blogName: el.blogName,
+            createdAt: el.createdAt
+
+        }))
 
 
+        const pageCount: number = await postCollection.countDocuments(filter)
 
+        const totalCount: number = Math.ceil(pageCount / pageSize)
+
+        const itemPostResponse: PaginatedType<PostIdType> = {
+            pagesCount: pageCount,
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            item: itemPost
+        }
+
+        return itemPostResponse
+
+    },
 
     async createPost(title: string, shortDescription: string, content: string,
-                     blogId: string, blogName: string) {
+                     blogId: string, blogName: string): Promise<PostIdType> {
 
         const newPost = {
 
@@ -25,8 +60,9 @@ export const repositoryPost = {
         }
 
         const resultNewPost = await postCollection.insertOne(newPost)
+
         return {
-            id: resultNewPost.insertedId.id,
+            id: resultNewPost.insertedId.toString(),
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,
@@ -36,8 +72,8 @@ export const repositoryPost = {
 
         }
 
-
     },
+
 
     async findPostId(id: string): Promise<PostIdType | null> {
 

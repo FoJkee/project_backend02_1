@@ -1,43 +1,86 @@
-import {Request, Response} from "express";
-import {blogsRouter} from "../setting";
+import {Request, Response, Router} from "express";
 import {serviceBlog} from "../domain/blog-domain";
+import {repositoryBlog} from "../repository/blog-repository";
+import {PostIdType, QueryParamsBlog, QueryParamsPost} from "../types";
+import {errorsMessages} from "../middleware/error-middleware";
+
+export const blogRouter = Router()
 
 
-// blogsRouter.get('/', (res: Response, req: Request) => {
-//
-//     const blogGet = repositoryBlog.findBlog()
-//     return res.status(200).json(blogGet)
-//
-// })
+blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Response) => {
 
-blogsRouter.post('/', (res: Response, req: Request) => {
+    const blogGet = await repositoryBlog.findBlog(
+        req.query.pageNumber ?? 1,
+        req.query.pageSize ?? 10,
+        req.query.sortBy ?? 'createdAt',
+        req.query.sortDirection ?? 'desc',
+        req.query.searchNameTerm ?? ''
+    )
 
-    const blogCreate = serviceBlog.createBlog(
+    return res.status(200).json(blogGet)
+
+})
+
+
+blogRouter.post('/', errorsMessages, async (req: Request, res: Response) => {
+
+    const blogCreate = await serviceBlog.createBlog(
         req.body.name,
         req.body.description,
         req.body.websiteUrl
     )
-    return res.status(201).json(blogCreate)
+    res.status(201).json(blogCreate)
 
 })
 
-// blogsRouter.get('/:id/posts', (res: Response, req: Request) => {
-//
-//     const blogGet = repositoryBlog.findBlog()
-//     return res.status(200).json(blogGet)
-//
-// })
-//
-// blogsRouter.post('/:id/posts', (res: Response, req: Request) => {
-//
-//     const blogGet = repositoryBlog.findBlog()
-//     return res.status(200).json(blogGet)
-//
-// })
+blogRouter.get('/:id/posts', async (req: Request<PostIdType,{},{},QueryParamsPost>, res: Response) => {
 
-blogsRouter.get('/:id', (res: Response, req: Request) => {
+    const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
+    if (!findBlogForId) {
+        res.sendStatus(404)
+        return
+    }
 
-    const blogGetId = serviceBlog.findBlogId(req.params.id)
+    const blogGet = await repositoryBlog.findPostForBlog(
+        req.query.pageNumber ?? 1,
+        req.query.pageSize ?? 10,
+        req.query.sortBy ?? 'createdAt',
+        req.query.sortDirection ?? 'desc',
+        req.params.blogId
+    )
+
+    return res.status(200).json(blogGet)
+
+})
+
+
+
+blogRouter.post('/:id/posts', async (req: Request, res: Response) => {
+
+    const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
+    if (!findBlogForId) {
+        res.sendStatus(404)
+        return
+    }
+
+
+    const blogGet = await repositoryBlog.createPostForBlog(
+        req.body.title,
+        req.body.shortDescription,
+        req.body.content,
+        req.params.id)
+
+    if (blogGet) {
+        res.status(201).json(blogGet)
+        return
+    }
+
+
+})
+
+blogRouter.get('/:id', async (req: Request, res: Response) => {
+
+    const blogGetId = await serviceBlog.findBlogId(req.params.id)
     if (blogGetId) {
         res.status(200).json(blogGetId)
     } else {
@@ -46,9 +89,9 @@ blogsRouter.get('/:id', (res: Response, req: Request) => {
 
 })
 
-blogsRouter.put('/:id', (res: Response, req: Request) => {
+blogRouter.put('/:id', async (req: Request, res: Response) => {
 
-    const blogFindId = serviceBlog.findBlogId(req.params.id)
+    const blogFindId = await serviceBlog.findBlogId(req.params.id)
 
     if (!blogFindId) {
         res.sendStatus(404)
@@ -56,18 +99,18 @@ blogsRouter.put('/:id', (res: Response, req: Request) => {
         res.status(204).json(blogFindId)
     }
 
-    const blogPut = serviceBlog.updateBlogId(
+    const blogPut = await serviceBlog.updateBlogId(
         req.params.id,
         req.body.name,
         req.body.description,
         req.body.websiteUrl
     )
-    return blogPut
+
 
 })
-blogsRouter.delete('/:id', (res: Response, req: Request) => {
+blogRouter.delete('/:id', async (req: Request, res: Response) => {
 
-    const blogGetId = serviceBlog.findBlogId(req.params.id)
+    const blogGetId = await serviceBlog.findBlogId(req.params.id)
     if (blogGetId) {
         res.status(200).json(blogGetId)
     } else {

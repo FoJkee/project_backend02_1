@@ -1,18 +1,23 @@
-import {blogCollection} from "../db";
-import {BlogIdType, BlogType, PaginatedType, QueryParamsBlogView} from "../types";
+import {blogCollection, postCollection} from "../db";
+import {BlogIdType, BlogType, PaginatedType, PostIdType, QueryParamsBlog} from "../types";
 import {Filter, ObjectId, WithId} from "mongodb";
 
 
 export const repositoryBlog = {
-    async findBlog(pagination: QueryParamsBlogView): Promise<PaginatedType<BlogIdType>> {
 
-        const filter: Filter<QueryParamsBlogView> = {name: {$regex: pagination.searchNameTerm ?? '', $options: 'i'}}
+    async findBlog(pageNumber: number,
+                   pageSize: number,
+                   sortBy: string,
+                   sortDirection: string,
+                   searchNameTerm: string): Promise<PaginatedType<BlogIdType>> {
+
+        const filter: Filter<QueryParamsBlog> = {name: {$regex: searchNameTerm, $options: 'i'}}
 
         const result = await blogCollection
             .find({filter})
-            .sort({[pagination.sortBy]: pagination.sortDirection})
-            .skip(pagination.pageSize * (pagination.pageNumber - 1))
-            .limit(pagination.pageSize)
+            .sort({[sortBy]: sortDirection = "desc"})
+            .skip(pageSize * (pageNumber - 1))
+            .limit(pageSize)
             .toArray()
 
         const itemBlog: BlogIdType[] = result.map(el => ({
@@ -24,13 +29,14 @@ export const repositoryBlog = {
             isMembership: el.isMembership
 
         }))
-        const totalCount = await blogCollection.countDocuments(filter)
-        const pagesCount = Math.ceil(totalCount / pagination.pageSize)
 
-        const resultBlog = {
+        const totalCount: number = await blogCollection.countDocuments(filter)
+        const pagesCount: number = Math.ceil(totalCount / pageSize)
+
+        const resultBlog: PaginatedType<BlogIdType> = {
             pagesCount: pagesCount,
-            page: pagination.pageNumber,
-            pageSize: pagination.pageSize,
+            page: pageNumber,
+            pageSize: pageSize,
             totalCount: totalCount,
             item: itemBlog
 
@@ -44,6 +50,7 @@ export const repositoryBlog = {
         const createBlogDb = await blogCollection.insertOne(blogCreate)
 
         return {
+
             id: createBlogDb.insertedId.toString(),
             name: blogCreate.name,
             description: blogCreate.description,
@@ -52,6 +59,83 @@ export const repositoryBlog = {
             isMembership: blogCreate.isMembership
         }
     },
+
+    async findPostForBlog(pageNumber: number,
+                          pageSize: number,
+                          sortBy: string,
+                          sortDirection: string, blogId: string):Promise<PaginatedType<PostIdType>> {
+
+
+
+
+        const result = await postCollection
+            .find({blogId})
+            .sort({[sortBy]: sortDirection = 'desc'})
+            .skip(pageSize * (pageNumber - 1))
+            .limit(pageSize)
+            .toArray()
+
+        const itemPostForBlog: PostIdType[] = result.map(el => ({
+
+            id: el._id.toString(),
+            title: el.title,
+            shortDescription: el.shortDescription,
+            content: el.content,
+            blogId: el.blogId,
+            blogName: el.blogName,
+            createdAt: el.createdAt
+        }))
+
+        const totalCount: number = await postCollection.countDocuments({blogId})
+        const pagesCount: number = Math.ceil(totalCount / pageSize)
+
+        const resultPostsForBlog: PaginatedType<PostIdType> = {
+            pagesCount: pagesCount,
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            item: itemPostForBlog
+
+        }
+        return resultPostsForBlog
+
+    },
+
+
+    async createPostForBlog(title: string,
+                            shortDescription: string,
+                            content: string,
+                            blogId: string): Promise<PostIdType | null> {
+
+        const createPostForBlogResult = await blogCollection.findOne({_id: new ObjectId(blogId)})
+
+        if (!createPostForBlogResult) {
+            return null
+        }
+        const createPostInBlog = {
+            _id: new ObjectId(),
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: createPostForBlogResult._id.toString(),
+            blogName: createPostForBlogResult.name,
+            createdAt: new Date().toISOString()
+        }
+
+        const result = await postCollection.insertOne(createPostInBlog)
+
+        return {
+            id: result.insertedId.toString(),
+            title: createPostInBlog.title,
+            shortDescription: createPostInBlog.shortDescription,
+            content: createPostInBlog.content,
+            blogId: blogId,
+            blogName: createPostInBlog.blogName,
+            createdAt: createPostInBlog.createdAt
+        }
+
+    },
+
 
     async findBlogId(id: string): Promise<BlogIdType | null> {
         const findBlogForId = await blogCollection.findOne({_id: new ObjectId(id)})
@@ -72,6 +156,7 @@ export const repositoryBlog = {
 
     },
 
+
     async updateBlogId(id: string, name: string, description: string, websiteUrl: string) {
 
         const updateBlogId = await blogCollection.updateOne({_id: new ObjectId(id)},
@@ -86,13 +171,13 @@ export const repositoryBlog = {
 
     },
 
-    async deleteBlogId(id: string): Promise<boolean>{
+    async deleteBlogId(id: string): Promise<boolean> {
         const deleteBlog = await blogCollection.deleteOne({_id: new ObjectId(id)})
         return deleteBlog.deletedCount === 1
 
     },
 
-    async deleteBlogAll():Promise<boolean>{
+    async deleteBlogAll(): Promise<boolean> {
         const deleteAllBlog = await blogCollection.deleteMany({})
         return deleteAllBlog.deletedCount === 1
 
