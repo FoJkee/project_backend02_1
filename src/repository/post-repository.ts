@@ -1,4 +1,4 @@
-import {Filter, ObjectId, WithId} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
 import {postCollection} from "../db";
 import {PaginatedType, PostIdType, PostType} from "../types";
 

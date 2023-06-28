@@ -1,7 +1,9 @@
 import {Request, Response, Router} from "express";
 import {repositoryPost} from "../repository/post-repository";
-import {QueryParamsPost} from "../types";
+import {PostIdType, QueryParamsPost} from "../types";
+import {authorization} from "../middleware/authorization";
 import {postMiddleware} from "../middleware/post-middleware";
+import {errorsMessages} from "../middleware/error-middleware";
 
 
 export const postRouter = Router()
@@ -15,11 +17,12 @@ postRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsPost>, res: Respo
         req.query.sortBy ?? "createdAt",
         req.query.sortDirection ?? "desc"
     )
+
     return res.status(200).json(postGet)
 
 })
 
-postRouter.post('/', async (req: Request, res: Response) => {
+postRouter.post('/', authorization, postMiddleware, errorsMessages, async (req: Request<{},{}, PostIdType>, res: Response) => {
 
     const postCreate = await repositoryPost.createPost(
         req.body.title,
@@ -31,8 +34,6 @@ postRouter.post('/', async (req: Request, res: Response) => {
     res.status(201).json(postCreate)
 
 })
-
-
 
 postRouter.get('/:id', async (req: Request, res: Response) => {
 
@@ -47,7 +48,7 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
 
 })
 
-postRouter.put('/:id', async (req: Request, res: Response) => {
+postRouter.put('/:id', authorization, postMiddleware, errorsMessages, async (req: Request, res: Response) => {
 
     const postPutId = await repositoryPost.findPostId(req.params.id)
 
@@ -65,10 +66,9 @@ postRouter.put('/:id', async (req: Request, res: Response) => {
         req.body.blogId
     )
 
-
 })
 
-postRouter.delete('/:id', async (req: Request, res: Response) => {
+postRouter.delete('/:id', authorization, async (req: Request, res: Response) => {
 
     const postDeleteId = await repositoryPost.findPostId(req.params.id)
 

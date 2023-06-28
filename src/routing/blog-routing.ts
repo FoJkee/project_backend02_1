@@ -3,6 +3,9 @@ import {serviceBlog} from "../domain/blog-domain";
 import {repositoryBlog} from "../repository/blog-repository";
 import {PostIdType, QueryParamsBlog, QueryParamsPost} from "../types";
 import {errorsMessages} from "../middleware/error-middleware";
+import {authorization} from "../middleware/authorization";
+import {blogMiddleware} from "../middleware/blog-middleware";
+import {postForBlogMiddleware} from "../middleware/postforblog-middleware";
 
 export const blogRouter = Router()
 
@@ -22,7 +25,7 @@ blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Respo
 })
 
 
-blogRouter.post('/', errorsMessages, async (req: Request, res: Response) => {
+blogRouter.post('/', authorization, blogMiddleware, errorsMessages, async (req: Request, res: Response) => {
 
     const blogCreate = await serviceBlog.createBlog(
         req.body.name,
@@ -33,7 +36,7 @@ blogRouter.post('/', errorsMessages, async (req: Request, res: Response) => {
 
 })
 
-blogRouter.get('/:id/posts', async (req: Request<PostIdType,{},{},QueryParamsPost>, res: Response) => {
+blogRouter.get('/:id/posts', async (req: Request<PostIdType, {}, {}, QueryParamsPost>, res: Response) => {
 
     const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
     if (!findBlogForId) {
@@ -53,9 +56,8 @@ blogRouter.get('/:id/posts', async (req: Request<PostIdType,{},{},QueryParamsPos
 
 })
 
-
-
-blogRouter.post('/:id/posts', async (req: Request, res: Response) => {
+blogRouter.post('/:id/posts', authorization, postForBlogMiddleware,
+    errorsMessages, async (req: Request, res: Response) => {
 
     const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
     if (!findBlogForId) {
@@ -89,7 +91,7 @@ blogRouter.get('/:id', async (req: Request, res: Response) => {
 
 })
 
-blogRouter.put('/:id', async (req: Request, res: Response) => {
+blogRouter.put('/:id', authorization, blogMiddleware, errorsMessages, async (req: Request, res: Response) => {
 
     const blogFindId = await serviceBlog.findBlogId(req.params.id)
 
@@ -106,16 +108,18 @@ blogRouter.put('/:id', async (req: Request, res: Response) => {
         req.body.websiteUrl
     )
 
-
 })
-blogRouter.delete('/:id', async (req: Request, res: Response) => {
+
+blogRouter.delete('/:id', authorization, async (req: Request, res: Response) => {
 
     const blogGetId = await serviceBlog.findBlogId(req.params.id)
-    if (blogGetId) {
-        res.status(200).json(blogGetId)
-    } else {
+    if (!blogGetId) {
         res.sendStatus(404)
+        return
     }
+
+    const blogDelete = await repositoryBlog.deleteBlogId(req.params.id)
+    res.sendStatus(204)
 
 })
 
