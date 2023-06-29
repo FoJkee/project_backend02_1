@@ -20,7 +20,6 @@ export const repositoryBlog = {
             .limit(pageSize)
             .toArray()
 
-        console.log('result', result)
         const itemBlog: BlogIdType[] = result.map(el => ({
             id: el._id.toString(),
             name: el.name,

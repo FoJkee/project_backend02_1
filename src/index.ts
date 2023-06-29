@@ -4,6 +4,8 @@ import {runDb} from "./db";
 import {blogRouter} from "./routing/blog-routing";
 import {deleteRouter} from "./routing/testing-routing";
 import {postRouter} from "./routing/post-routing";
+import {authRouter} from "./routing/auth-routing";
+import {userRouter} from "./routing/user-routing";
 
 
 const app = express()
@@ -20,6 +22,8 @@ app.use(parseMiddleware)
 app.use('/blogs', blogRouter)
 app.use('/posts', postRouter)
 app.use('/testing', deleteRouter)
+app.use('/auth', authRouter)
+app.use('/user', userRouter)
 
 
 app.get('/', (req: Request, res: Response) => {

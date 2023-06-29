@@ -48,7 +48,23 @@ export type Auth = {
     loginOrEmail: string,
     password: string
 
+}
+export type UserType = {
+    login: string,
+    email: string,
+    createdAt: string
 
+}
+
+export type UserIdType = UserType & { id : string}
+
+export type QueryParamsUser = {
+    pageNumber: number,
+    pageSize: number,
+    sortBy: string,
+    sortDirection: string,
+    searchLoginTerm: string | null,
+    searchEmailTerm: string | null
 }
 
 

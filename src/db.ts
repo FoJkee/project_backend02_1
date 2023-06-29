@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import {MongoClient, WithId} from "mongodb";
-import {BlogType, PostType} from "./types";
+import {BlogType, PostType, UserType} from "./types";
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ const db = client.db('network')
 
 export const postCollection = db.collection<WithId<PostType>>('posts')
 export const blogCollection = db.collection<WithId<BlogType>>('blogs')
+export const usersCollection = db.collection<WithId<UserType>>('users')
 
 
 

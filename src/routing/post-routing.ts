@@ -65,7 +65,7 @@ postRouter.put('/:id', authorization, postMiddleware, errorsMessages, async (req
         req.body.content,
         req.body.blogId
     )
-
+ 
 })
 
 postRouter.delete('/:id', authorization, async (req: Request, res: Response) => {

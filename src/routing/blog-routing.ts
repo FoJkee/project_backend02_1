@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {serviceBlog} from "../domain/blog-domain";
+import {serviceBlog} from "../domain/blog-service";
 import {repositoryBlog} from "../repository/blog-repository";
 import {PostIdType, QueryParamsBlog, QueryParamsPost} from "../types";
 import {errorsMessages} from "../middleware/error-middleware";
