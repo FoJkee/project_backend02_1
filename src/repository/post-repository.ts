@@ -38,7 +38,7 @@ export const repositoryPost = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            item: itemPost
+            items: itemPost
         }
 
         return itemPostResponse

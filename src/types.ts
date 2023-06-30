@@ -27,7 +27,7 @@ export type PaginatedType<T> = {
     page: number,
     pageSize: number,
     totalCount: number,
-    item: T[]
+    items: T[]
 }
 
 export type QueryParamsBlog = {

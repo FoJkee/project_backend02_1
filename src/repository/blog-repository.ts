@@ -39,7 +39,7 @@ export const repositoryBlog = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            item: itemBlog
+            items: itemBlog
 
         }
         return resultBlog
@@ -95,7 +95,7 @@ export const repositoryBlog = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            item: itemPostForBlog
+            items: itemPostForBlog
 
         }
         return resultPostsForBlog

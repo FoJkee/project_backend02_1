@@ -44,7 +44,7 @@ export const repositoryUser = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            item: itemUser
+            items: itemUser
         }
         return itemUserResponse
 

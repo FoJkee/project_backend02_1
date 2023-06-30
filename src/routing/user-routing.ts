@@ -9,7 +9,7 @@ import {userMiddleware} from "../middleware/user-middleware";
 export const userRouter = Router({})
 
 
-userRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsUser>, res: Response) => {
+userRouter.get('/',  async (req: Request<{}, {}, {}, QueryParamsUser>, res: Response) => {
 
     const userGet = await repositoryUser.findUser(
         req.query.pageNumber ?? 1,
