@@ -25,8 +25,6 @@ userRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsUser>, res: Respo
 })
 
 
-
-
 userRouter.post('/', authorization, userMiddleware, async (req: Request, res: Response) => {
     const newUser = await usersServise.createUser(req.body.login, req.body.email, req.body.password)
     return res.status(201).json(newUser)
