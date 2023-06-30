@@ -23,7 +23,7 @@ app.use('/blogs', blogRouter)
 app.use('/posts', postRouter)
 app.use('/testing', deleteRouter)
 app.use('/auth', authRouter)
-app.use('/user', userRouter)
+app.use('/users', userRouter)
 
 
 app.get('/', (req: Request, res: Response) => {

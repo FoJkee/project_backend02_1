@@ -1,3 +1,5 @@
+import {ObjectId} from "mongodb";
+
 export type BlogType = {
     name: string,
     description: string,
@@ -44,19 +46,18 @@ export type QueryParamsPost = {
     sortDirection: string,
 }
 
-export type Auth = {
-    loginOrEmail: string,
-    password: string
-
-}
-export type UserType = {
+export type UserDbType = {
+    _id: ObjectId,
     login: string,
     email: string,
-    createdAt: string
+    passwordHash: string,
+    passwordSalt: string,
+    createdAt: string,
 
 }
 
-export type UserIdType = UserType & { id : string}
+export type PublicUser = {id: string} & Omit<UserDbType, '_id' | 'passwordHash' | 'passwordSalt'>
+
 
 export type QueryParamsUser = {
     pageNumber: number,
