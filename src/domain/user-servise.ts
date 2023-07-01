@@ -1,4 +1,4 @@
-import {PublicUser, UserDbType} from "../types";
+import {PublicUser} from "../types";
 import bcrypt from "bcrypt";
 import {ObjectId} from "mongodb";
 import {repositoryUser} from "../repository/user-repository";
@@ -30,7 +30,6 @@ export const usersServise = {
         const user = await repositoryUser.findByLoginOrEmail(loginOrEmail)
         if (!user) return false
 
-        const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, user.passwordSalt)
         if (user.passwordHash !== passwordHash) {
 

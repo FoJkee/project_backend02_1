@@ -13,7 +13,7 @@ export const repositoryPost = {
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
-            .limit(pageSize)
+            .limit(parseInt("pageSize", 10))
             .toArray()
 
 

@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import {MongoClient, WithId} from "mongodb";
-import {BlogType, PostType, PublicUser, UserDbType} from "./types";
+import {BlogType, PostType, UserDbType} from "./types";
 
 dotenv.config()
 

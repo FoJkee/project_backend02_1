@@ -1,5 +1,5 @@
 import {blogCollection, postCollection} from "../db";
-import {BlogIdType, BlogType, PaginatedType, PostIdType, PostType} from "../types";
+import {BlogIdType, BlogType, PaginatedType, PostIdType} from "../types";
 import {Filter, ObjectId, WithId} from "mongodb";
 
 
@@ -17,7 +17,7 @@ export const repositoryBlog = {
             .find(filter)
             .sort({[sortBy]: sortDirection = "desc"})
             .skip(pageSize * (pageNumber - 1))
-            .limit(Number(parseInt("pageSize", 10)))
+            .limit(parseInt(String(pageSize), 10))
             .toArray()
 
         const itemBlog: BlogIdType[] = result.map(el => ({
@@ -73,7 +73,7 @@ export const repositoryBlog = {
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
-            .limit(Number(parseInt("pageSize", 10)))
+            .limit(parseInt("pageSize", 10))
             .toArray()
 
         const itemPostForBlog: PostIdType[] = result.map(el => ({
