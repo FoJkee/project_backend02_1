@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 
 const patternLogin = '^[a-zA-Z0-9_-]*$'
-const patternEmail = '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$\n'
+const patternEmail = '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'
 
 
 export const userMiddleware = [
