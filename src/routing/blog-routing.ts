@@ -49,7 +49,7 @@ blogRouter.get('/:id/posts', async (req: Request<PostIdType, {}, {}, QueryParams
         req.query.pageSize ?? 10,
         req.query.sortBy ?? 'createdAt',
         req.query.sortDirection ?? 'desc',
-        req.params.id
+        req.params.blogId
     )
     if (blogGetId) {
         res.status(200).json(blogGetId)
