@@ -1,4 +1,4 @@
-import {Filter, ObjectId, WithId} from "mongodb";
+import {Filter, ObjectId, Sort, SortDirection, WithId} from "mongodb";
 import {PaginatedType, PublicUser, UserDbType} from "../types";
 import {postCollection, usersCollection} from "../db";
 
@@ -8,7 +8,7 @@ export const repositoryUser = {
     async findUser(pageNumber: number,
                    pageSize: number,
                    sortBy: string,
-                   sortDirection: string,
+                   sortDirection: SortDirection,
                    searchLoginTerm: string,
                    searchEmailTerm: string): Promise<PaginatedType<PublicUser>> {
 
@@ -26,7 +26,7 @@ export const repositoryUser = {
 
         const findForUser = await usersCollection
             .find(filter)
-            .sort({[sortBy]: sortDirection = 'desc'})
+            .sort({[sortBy]: sortDirection})
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()

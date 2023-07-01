@@ -1,17 +1,17 @@
-import {Filter, ObjectId} from "mongodb";
+import {Filter, ObjectId, SortDirection} from "mongodb";
 import {postCollection} from "../db";
 import {PaginatedType, PostIdType, PostType} from "../types";
 
 export const repositoryPost = {
 
     async findPost(pageNumber: number, pageSize: number,
-                   sortBy: string, sortDirection: string): Promise<PaginatedType<PostIdType>>{
+                   sortBy: string, sortDirection: SortDirection): Promise<PaginatedType<PostIdType>>{
 
         const filter: Filter<PostType> = {}
 
         const findForPost = await postCollection
             .find(filter)
-            .sort({[sortBy]: sortDirection = 'desc'})
+            .sort({[sortBy]: sortDirection})
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()

@@ -1,6 +1,6 @@
 import {blogCollection, postCollection} from "../db";
 import {BlogIdType, BlogType, PaginatedType, PostIdType} from "../types";
-import {Filter, ObjectId, WithId} from "mongodb";
+import {Filter, ObjectId, SortDirection, WithId} from "mongodb";
 
 
 export const repositoryBlog = {
@@ -8,14 +8,14 @@ export const repositoryBlog = {
     async findBlog(pageNumber: number,
                    pageSize: number,
                    sortBy: string,
-                   sortDirection: string,
+                   sortDirection: SortDirection,
                    searchNameTerm: string): Promise<PaginatedType<BlogIdType>> {
 
         const filter: Filter<BlogType> = {name: {$regex: searchNameTerm, $options: 'i'}}
 
         const result = await blogCollection
             .find(filter)
-            .sort({[sortBy]: sortDirection = "desc"})
+            .sort({[sortBy]: sortDirection})
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()
@@ -64,14 +64,14 @@ export const repositoryBlog = {
     async findPostForBlog(pageNumber: number,
                           pageSize: number,
                           sortBy: string,
-                          sortDirection: string, id: string): Promise<PaginatedType<PostIdType>> {
+                          sortDirection: SortDirection, id: string): Promise<PaginatedType<PostIdType>> {
 
 
         const filter = {blogId: id}
 
         const result = await postCollection
             .find(filter)
-            .sort({[sortBy]: sortDirection = 'desc'})
+            .sort({[sortBy]: sortDirection})
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()

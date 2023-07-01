@@ -15,7 +15,7 @@ postRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsPost>, res: Respo
         Number(req.query.pageNumber) || 1,
         Number(req.query.pageSize) || 10,
         req.query.sortBy || "createdAt",
-        req.query.sortDirection || "desc"
+        req.query.sortDirection === "desc" ? "desc" : "asc"
     )
 
     return res.status(200).json(postGet)

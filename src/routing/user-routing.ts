@@ -5,6 +5,7 @@ import {usersServise} from "../domain/user-servise";
 import {QueryParamsUser} from "../types";
 import {userMiddleware} from "../middleware/user-middleware";
 import {errorsMessages} from "../middleware/error-middleware";
+import {postMiddleware} from "../middleware/post-middleware";
 
 
 export const userRouter = Router({})
@@ -16,7 +17,7 @@ userRouter.get('/',  async (req: Request<{}, {}, {}, QueryParamsUser>, res: Resp
         Number(req.query.pageNumber) || 1,
         Number(req.query.pageSize) || 10,
         req.query.sortBy || 'createdAt',
-        req.query.sortDirection || "desc",
+        req.query.sortDirection === "desc" ? "desc" : "asc",
         req.query.searchLoginTerm || '',
         req.query.searchEmailTerm || '',
     )
