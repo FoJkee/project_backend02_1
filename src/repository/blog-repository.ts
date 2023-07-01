@@ -64,16 +64,16 @@ export const repositoryBlog = {
     async findPostForBlog(pageNumber: number,
                           pageSize: number,
                           sortBy: string,
-                          sortDirection: string, id: string):Promise<PaginatedType<PostIdType>> {
+                          sortDirection: string, id: string): Promise<PaginatedType<PostIdType>> {
 
 
-const filter = {blogId: id}
+        const filter = {blogId: id}
 
         const result = await postCollection
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
-            .limit(pageSize = parseInt("pageSize", 10))
+            .limit(parseInt("pageSize", 10))
             .toArray()
 
         const itemPostForBlog: PostIdType[] = result.map(el => ({
