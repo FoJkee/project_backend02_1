@@ -1,6 +1,6 @@
 import {Filter, ObjectId, WithId} from "mongodb";
 import {PaginatedType, PublicUser, UserDbType} from "../types";
-import {usersCollection} from "../db";
+import {postCollection, usersCollection} from "../db";
 
 
 export const repositoryUser = {
@@ -33,7 +33,7 @@ export const repositoryUser = {
 
         const itemUser: PublicUser[] = findForUser.map(el => ({
             id: el._id.toString(),
-            email:el.email,
+            email: el.email,
             login: el.login,
             createdAt: el.createdAt
         }))
@@ -94,7 +94,10 @@ export const repositoryUser = {
 
         const deleteUser = await usersCollection.deleteOne({_id: new ObjectId(id)})
         return deleteUser.deletedCount === 1
+    },
+
+    async deleteUserAll(): Promise<boolean> {
+        const deleteUser = await usersCollection.deleteMany()
+        return deleteUser.deletedCount === 1
     }
-
-
 }

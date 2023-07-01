@@ -13,11 +13,11 @@ export const blogRouter = Router()
 blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Response) => {
 
     const blogGet = await repositoryBlog.findBlog(
-        Number(req.query.pageNumber) ?? 1,
-        Number(req.query.pageSize) ?? 10,
-        req.query.sortBy ?? 'createdAt',
-        req.query.sortDirection ?? 'desc',
-        req.query.searchNameTerm ?? ''
+        Number(req.query.pageNumber) || 1,
+        Number(req.query.pageSize) || 10,
+        req.query.sortBy || 'createdAt',
+        req.query.sortDirection || 'desc',
+        req.query.searchNameTerm || ''
     )
 
    return  res.status(200).json(blogGet)
@@ -45,10 +45,10 @@ blogRouter.get('/:id/posts', async (req: Request<PostIdType, {}, {}, QueryParams
     }
 
     const blogGetId = await repositoryBlog.findPostForBlog(
-        Number(req.query.pageNumber) ?? 1,
-        Number(req.query.pageSize) ?? 10,
-        req.query.sortBy ?? 'createdAt',
-        req.query.sortDirection ?? 'desc',
+        Number(req.query.pageNumber) || 1,
+        Number(req.query.pageSize) || 10,
+        req.query.sortBy || 'createdAt',
+        req.query.sortDirection || 'desc',
         req.params.id
     )
     if (blogGetId) {

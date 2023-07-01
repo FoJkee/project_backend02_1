@@ -12,10 +12,10 @@ postRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsPost>, res: Respo
 
 
     const postGet = await repositoryPost.findPost(
-        Number(req.query.pageNumber) ?? 1,
-        Number(req.query.pageSize) ?? 10,
-        req.query.sortBy ?? "createdAt",
-        req.query.sortDirection ?? "desc"
+        Number(req.query.pageNumber) || 1,
+        Number(req.query.pageSize) || 10,
+        req.query.sortBy || "createdAt",
+        req.query.sortDirection || "desc"
     )
 
     return res.status(200).json(postGet)
