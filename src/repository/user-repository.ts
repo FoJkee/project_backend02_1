@@ -12,17 +12,10 @@ export const repositoryUser = {
                    searchLoginTerm: string,
                    searchEmailTerm: string): Promise<PaginatedType<PublicUser>> {
 
-        const filter: Filter<UserDbType> = ({
-            login: {
-                $regex: searchLoginTerm,
-                $options: 'i'
-            } || {
-                email: {
-                    $regex: searchEmailTerm,
-                    $options: "i"
-                }
-            }
-        })
+
+        const filter: Filter<UserDbType> = usersCollection.find({$or: [{ login: { $regex: searchLoginTerm, $options: 'i'}},
+                { email: { $regex: searchEmailTerm, $options: "i" }}]})
+
 
         const findForUser = await usersCollection
             .find(filter)
