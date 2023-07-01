@@ -4,6 +4,7 @@ import {repositoryUser} from "../repository/user-repository";
 import {usersServise} from "../domain/user-servise";
 import {QueryParamsUser} from "../types";
 import {userMiddleware} from "../middleware/user-middleware";
+import {errorsMessages} from "../middleware/error-middleware";
 
 
 export const userRouter = Router({})
@@ -25,7 +26,7 @@ userRouter.get('/',  async (req: Request<{}, {}, {}, QueryParamsUser>, res: Resp
 })
 
 
-userRouter.post('/', authorization, userMiddleware, async (req: Request, res: Response) => {
+userRouter.post('/', authorization, userMiddleware, errorsMessages, async (req: Request, res: Response) => {
     const newUser = await usersServise.createUser(req.body.login, req.body.email, req.body.password)
     return res.status(201).json(newUser)
 
@@ -35,7 +36,7 @@ userRouter.post('/', authorization, userMiddleware, async (req: Request, res: Re
 
 
 userRouter.delete('/:id', authorization, async (req: Request, res: Response) => {
-    const deleteUserId = await repositoryUser.findUserById(req.body.id)
+    const deleteUserId = await repositoryUser.findUserById(req.params.id)
 
     if(!deleteUserId){
         res.sendStatus(404)

@@ -14,7 +14,7 @@ export const repositoryBlog = {
         const filter: Filter<BlogType> = {name: {$regex: searchNameTerm ?? '', $options: 'i'}}
 
         const result = await blogCollection
-            .find(filter)
+            .find({filter})
             .sort({[sortBy]: sortDirection = "desc"})
             .skip(pageSize * (pageNumber - 1))
             .limit(+pageSize)
@@ -73,7 +73,7 @@ export const repositoryBlog = {
             .find({blogId})
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
-            .limit(pageSize)
+            .limit(+pageSize)
             .toArray()
 
         const itemPostForBlog: PostIdType[] = result.map(el => ({

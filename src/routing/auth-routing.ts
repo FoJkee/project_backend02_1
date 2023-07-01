@@ -9,7 +9,10 @@ export const authRouter = Router({})
 authRouter.post('/login', errorsMessages, async (req: Request, res: Response) => {
 
     const checkResult = await usersServise.checkCredentials(req.body.loginOrEmail, req.body.password)
-
+    if(!checkResult){
+        res.sendStatus(401)
+        return
+    }
     res.status(204).json(checkResult)
 
 
