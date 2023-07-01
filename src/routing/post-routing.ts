@@ -22,7 +22,7 @@ postRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsPost>, res: Respo
 
 })
 
-postRouter.post('/', authorization, postMiddleware, errorsMessages, async (req: Request<{},{}, PostIdType>, res: Response) => {
+postRouter.post('/', authorization, postMiddleware, errorsMessages, async (req: Request<{}, {}, PostIdType>, res: Response) => {
 
     const postCreate = await repositoryPost.createPost(
         req.body.title,
@@ -52,20 +52,16 @@ postRouter.put('/:id', authorization, postMiddleware, errorsMessages, async (req
 
     const postPutId = await repositoryPost.findPostId(req.params.id)
 
-    if (postPutId) {
-        res.status(204).json(postPutId)
-    } else {
+    if (!postPutId) {
         res.sendStatus(404)
+
+    } else {
+        res.status(204).json(postPutId)
     }
 
-    const postPut = await repositoryPost.updatePostId(
-        req.params.id,
-        req.body.title,
-        req.body.shortDescription,
-        req.body.content,
-        req.body.blogId
-    )
- 
+    const postPut = await repositoryPost.updatePostId(req.params.id, req.body.title, req.body.shortDescription,
+        req.body.content, req.body.blogId)
+
 })
 
 postRouter.delete('/:id', authorization, async (req: Request, res: Response) => {
