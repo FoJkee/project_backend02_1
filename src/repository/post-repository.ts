@@ -79,6 +79,7 @@ export const repositoryPost = {
     async findPostId(id: string): Promise<PostIdType | null> {
 
         const findPostForId = await postCollection.findOne({_id: new ObjectId(id)})
+        console.log('findPostForId', findPostForId)
 
         if (findPostForId) {
             return {

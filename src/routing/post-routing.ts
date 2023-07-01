@@ -37,7 +37,7 @@ postRouter.post('/', authorization, postMiddleware, errorsMessages, async (req: 
 
 postRouter.get('/:id', async (req: Request, res: Response) => {
 
-    const postGetId = repositoryPost.findPostId(req.params.id)
+    const postGetId = await repositoryPost.findPostId(req.params.id)
 
     if (postGetId) {
         res.status(200).json(postGetId)

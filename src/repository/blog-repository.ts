@@ -140,7 +140,6 @@ export const repositoryBlog = {
 
     async findBlogId(id: string): Promise<BlogIdType | null> {
         const findBlogForId = await blogCollection.findOne({_id: new ObjectId(id)})
-
         if (findBlogForId) {
             return {
                 id: findBlogForId._id.toString(),
