@@ -45,8 +45,8 @@ blogRouter.get('/:id/posts', async (req: Request<PostIdType, {}, {}, QueryParams
     }
 
     const blogGetId = await repositoryBlog.findPostForBlog(
-        req.query.pageNumber ?? 1,
-        req.query.pageSize ?? 10,
+        Number(req.query.pageNumber) ?? 1,
+        Number(req.query.pageSize) ?? 10,
         req.query.sortBy ?? 'createdAt',
         req.query.sortDirection ?? 'desc',
         req.params.id
