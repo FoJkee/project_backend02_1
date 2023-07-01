@@ -13,8 +13,8 @@ export const blogRouter = Router()
 blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Response) => {
 
     const blogGet = await repositoryBlog.findBlog(
-        req.query.pageNumber ?? 1,
-        req.query.pageSize ?? 10,
+        Number(req.query.pageNumber) ?? 1,
+        Number(req.query.pageSize) ?? 10,
         req.query.sortBy ?? 'createdAt',
         req.query.sortDirection ?? 'desc',
         req.query.searchNameTerm ?? ''

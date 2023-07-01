@@ -13,8 +13,8 @@ export const userRouter = Router({})
 userRouter.get('/',  async (req: Request<{}, {}, {}, QueryParamsUser>, res: Response) => {
 
     const userGet = await repositoryUser.findUser(
-        req.query.pageNumber ?? 1,
-        req.query.pageSize ?? 10,
+        Number(req.query.pageNumber) ?? 1,
+        Number(req.query.pageSize) ?? 10,
         req.query.sortBy ?? 'createdAt',
         req.query.sortDirection ?? "desc",
         req.query.searchLoginTerm ?? '',
