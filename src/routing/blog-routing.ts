@@ -20,7 +20,7 @@ blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Respo
         req.query.searchNameTerm ?? ''
     )
 
-    return res.status(200).json(blogGet)
+    res.status(200).json(blogGet)
 
 })
 
@@ -44,41 +44,43 @@ blogRouter.get('/:id/posts', async (req: Request<PostIdType, {}, {}, QueryParams
         return
     }
 
-    const blogGet = await repositoryBlog.findPostForBlog(
+    const blogGetId = await repositoryBlog.findPostForBlog(
         req.query.pageNumber ?? 1,
         req.query.pageSize ?? 10,
         req.query.sortBy ?? 'createdAt',
         req.query.sortDirection ?? 'desc',
         req.params.id
     )
-
-    return res.status(200).json(blogGet)
+    if (blogGetId) {
+        res.status(200).json(blogGetId)
+        return
+    }
 
 })
 
 blogRouter.post('/:id/posts', authorization, postForBlogMiddleware,
     errorsMessages, async (req: Request, res: Response) => {
 
-    const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
-    if (!findBlogForId) {
-        res.sendStatus(404)
-        return
-    }
+        const findBlogForId = await repositoryBlog.findBlogId(req.params.id)
+        if (!findBlogForId) {
+            res.sendStatus(404)
+            return
+        }
 
 
-    const blogGet = await repositoryBlog.createPostForBlog(
-        req.body.title,
-        req.body.shortDescription,
-        req.body.content,
-        req.params.id)
+        const blogGetById = await repositoryBlog.createPostForBlog(
+            req.body.title,
+            req.body.shortDescription,
+            req.body.content,
+            req.params.id)
 
-    if (blogGet) {
-        res.status(201).json(blogGet)
-        return
-    }
+        if (blogGetById) {
+            res.status(201).json(blogGetById)
+            return
+        }
 
 
-})
+    })
 
 blogRouter.get('/:id', async (req: Request, res: Response) => {
 

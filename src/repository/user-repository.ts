@@ -27,6 +27,8 @@ export const repositoryUser = {
         const findForUser = await usersCollection
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
+            .skip(pageSize * (pageNumber - 1))
+            .limit(+pageSize)
             .toArray()
 
         const itemUser: PublicUser[] = findForUser.map(el => ({
@@ -62,8 +64,8 @@ export const repositoryUser = {
 
     },
 
-    async findUserById(id: ObjectId): Promise<PublicUser | null> {
-        let findUserId = await usersCollection.findOne({_id: id})
+    async findUserById(id: string): Promise<PublicUser | null> {
+        let findUserId = await usersCollection.findOne({_id: new ObjectId(id)})
 
         if (findUserId) {
             return {

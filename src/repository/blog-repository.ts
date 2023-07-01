@@ -17,7 +17,7 @@ export const repositoryBlog = {
             .find(filter)
             .sort({[sortBy]: sortDirection = "desc"})
             .skip(pageSize * (pageNumber - 1))
-            .limit(pageSize)
+            .limit(+pageSize)
             .toArray()
 
         const itemBlog: BlogIdType[] = result.map(el => ({
