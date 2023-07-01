@@ -19,7 +19,6 @@ userRouter.get('/',  async (req: Request<{}, {}, {}, QueryParamsUser>, res: Resp
         req.query.sortDirection || "desc",
         req.query.searchLoginTerm || '',
         req.query.searchEmailTerm || '',
-
     )
    return res.status(200).json(userGet)
 
