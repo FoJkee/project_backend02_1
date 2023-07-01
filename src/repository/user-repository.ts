@@ -38,11 +38,12 @@ export const repositoryUser = {
             createdAt: el.createdAt
         }))
 
-        const pageCount: number = await usersCollection.countDocuments(filter)
-        const totalCount: number = Math.ceil(pageCount / pageSize)
+        const totalCount: number = await usersCollection.countDocuments(filter)
+
+        const pagesCount: number = Math.ceil(totalCount / pageSize)
 
         const itemUserResponse: PaginatedType<PublicUser> = {
-            pagesCount: pageCount,
+            pagesCount: pagesCount,
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
