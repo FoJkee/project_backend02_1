@@ -20,7 +20,7 @@ blogRouter.get('/', async (req: Request<{}, {}, {}, QueryParamsBlog>, res: Respo
         req.query.searchNameTerm ?? ''
     )
 
-    res.status(200).json(blogGet)
+   return  res.status(200).json(blogGet)
 
 })
 
