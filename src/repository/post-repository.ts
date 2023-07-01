@@ -29,12 +29,12 @@ export const repositoryPost = {
         }))
 
 
-        const pageCount: number = await postCollection.countDocuments(filter)
+        const totalCount: number = await postCollection.countDocuments(filter)
 
-        const totalCount: number = Math.ceil(pageCount / pageSize)
+        const pagesCount: number = Math.ceil(totalCount / pageSize)
 
         const itemPostResponse: PaginatedType<PostIdType> = {
-            pagesCount: pageCount,
+            pagesCount: pagesCount,
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
