@@ -14,11 +14,11 @@ export const repositoryUser = {
 
         const filter: Filter<UserDbType> = ({
             login: {
-                $regex: searchLoginTerm ?? '',
+                $regex: searchLoginTerm,
                 $options: 'i'
             } || {
                 email: {
-                    $regex: searchEmailTerm ?? '',
+                    $regex: searchEmailTerm,
                     $options: "i"
                 }
             }
@@ -27,8 +27,6 @@ export const repositoryUser = {
         const findForUser = await usersCollection
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
-            .skip(pageSize * (pageNumber - 1))
-            .limit(parseInt("pageSize", 10))
             .toArray()
 
         const itemUser: PublicUser[] = findForUser.map(el => ({
