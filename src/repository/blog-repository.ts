@@ -17,7 +17,7 @@ export const repositoryBlog = {
             .find(filter)
             .sort({[sortBy]: sortDirection = "desc"})
             .skip(pageSize * (pageNumber - 1))
-            .limit(+pageSize)
+            .limit(Number(parseInt("pageSize", 10)))
             .toArray()
 
         const itemBlog: BlogIdType[] = result.map(el => ({
@@ -73,7 +73,7 @@ export const repositoryBlog = {
             .find(filter)
             .sort({[sortBy]: sortDirection = 'desc'})
             .skip(pageSize * (pageNumber - 1))
-            .limit(parseInt("pageSize", 10))
+            .limit(Number(parseInt("pageSize", 10)))
             .toArray()
 
         const itemPostForBlog: PostIdType[] = result.map(el => ({
