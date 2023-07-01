@@ -15,8 +15,16 @@ export const repositoryUser = {
 
 
 
-        const filter: Filter<UserDbType> = { login: { $regex: searchLoginTerm, $options: 'i'}} ||
-            { email: { $regex: searchEmailTerm, $options: "i" }}
+        // const filter: Filter<UserDbType> = ({ login: { $regex: searchLoginTerm, $options: 'i'}} ||
+        //     { email: { $regex: searchEmailTerm, $options: "i" }})
+
+        const filter: Filter<UserDbType> = usersCollection.findOne({$or: [{ login: { $regex: searchLoginTerm, $options: 'i'}},
+                { email: { $regex: searchEmailTerm, $options: "i" }}
+
+
+            ]})
+
+
 
 
 
