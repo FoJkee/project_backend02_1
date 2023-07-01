@@ -11,7 +11,7 @@ export const repositoryBlog = {
                    sortDirection: string,
                    searchNameTerm: string): Promise<PaginatedType<BlogIdType>> {
 
-        const filter: Filter<BlogType> = {name: {$regex: searchNameTerm ?? '', $options: 'i'}}
+        const filter: Filter<BlogType> = {name: {$regex: searchNameTerm, $options: 'i'}}
 
         const result = await blogCollection
             .find(filter)
