@@ -13,19 +13,26 @@ export const repositoryUser = {
                    searchEmailTerm: string): Promise<PaginatedType<PublicUser>> {
 
 
-
-
         // const filter: Filter<UserDbType> = ({ login: { $regex: searchLoginTerm, $options: 'i'}} ||
         //     { email: { $regex: searchEmailTerm, $options: "i" }})
+        const filter: Filter<UserDbType> = []
+
+        if (searchLoginTerm || searchEmailTerm) {
+
+            if (searchLoginTerm) {
+                filter.push({login: {$regex: searchLoginTerm, $options: 'i'}})
+
+            }
+            if (searchEmailTerm) {
+                filter.push({email: {$regex: searchEmailTerm, $options: "i"}})
+            }
+
+        }
 
 
-        const filter: Filter<UserDbType> = ({$and: [{ login: { $regex: searchLoginTerm, $options: 'i'}},
-                { email: { $regex: searchEmailTerm, $options: "i" }}
-            ]})
-
-
-
-
+        // const filter: Filter<UserDbType> = ({$and: [{ login: { $regex: searchLoginTerm, $options: 'i'}},
+        //         { email: { $regex: searchEmailTerm, $options: "i" }}
+        //     ]})
 
 
         const findForUser = await usersCollection
@@ -55,9 +62,14 @@ export const repositoryUser = {
         }
         return itemUserResponse
 
-    },
+    }
+    ,
 
-    async createUser(userCreate: WithId<UserDbType>): Promise<PublicUser> {
+    async createUser(userCreate
+                         :
+                         WithId<UserDbType>
+    ):
+        Promise<PublicUser> {
 
         const resultUser = await usersCollection.insertOne(userCreate)
         return {
@@ -69,7 +81,11 @@ export const repositoryUser = {
 
     },
 
-    async findUserById(id: string): Promise<PublicUser | null> {
+    async findUserById(id
+                           :
+                           string
+    ):
+        Promise<PublicUser | null> {
         let findUserId = await usersCollection.findOne({_id: new ObjectId(id)})
 
         if (findUserId) {
@@ -86,21 +102,31 @@ export const repositoryUser = {
         }
     },
 
-    async findByLoginOrEmail(loginOrEmail: string) {
+    async findByLoginOrEmail(loginOrEmail
+                                 :
+                                 string
+    ) {
         const user = await usersCollection.findOne({
             $or: [{email: loginOrEmail}, {login: loginOrEmail}]
         })
         return user
 
-    },
+    }
+    ,
 
-    async deleteUserForId(id: string): Promise<boolean> {
+    async deleteUserForId(id
+                              :
+                              string
+    ):
+        Promise<boolean> {
 
         const deleteUser = await usersCollection.deleteOne({_id: new ObjectId(id)})
         return deleteUser.deletedCount === 1
     },
 
-    async deleteUserAll(): Promise<boolean> {
+    async deleteUserAll()
+        :
+        Promise<boolean> {
         const deleteUser = await usersCollection.deleteMany()
         return deleteUser.deletedCount === 1
     }
