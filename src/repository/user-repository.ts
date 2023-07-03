@@ -13,27 +13,22 @@ export const repositoryUser = {
                    searchEmailTerm: string): Promise<PaginatedType<PublicUser>> {
 
 
-        // const filter: Filter<UserDbType> = ({ login: { $regex: searchLoginTerm, $options: 'i'}} ||
-        //     { email: { $regex: searchEmailTerm, $options: "i" }})
+        let filter: Filter<UserDbType> = {}
 
-
-        const filter: Filter<UserDbType> = {}
-
-        if (searchLoginTerm || searchEmailTerm) {
+         if (searchLoginTerm || searchEmailTerm) {
             filter.$or = []
+
             if (searchLoginTerm) {
-                filter.$or.push({login: {$regex: searchLoginTerm, $options: 'i'}})
+                filter.push({login: {$regex: searchLoginTerm, $options: 'i'}})
             }
             if (searchEmailTerm) {
-                filter.$or.push({email: {$regex: searchEmailTerm, $options: "i"}})
+                filter.push({email: {$regex: searchEmailTerm, $options: "i"}})
             }
 
         }
 
-
-        // const filter: Filter<UserDbType> = ({$and: [{ login: { $regex: searchLoginTerm, $options: 'i'}},
-        //         { email: { $regex: searchEmailTerm, $options: "i" }}
-        //     ]})
+        // const filter: Filter<UserDbType> = { $or: [{login: {$regex: searchLoginTerm, $options: 'i'}},
+        //         {email: {$regex: searchEmailTerm, $options: "i"}}]}
 
 
         const findForUser = await usersCollection
@@ -42,6 +37,7 @@ export const repositoryUser = {
             .skip(pageSize * (pageNumber - 1))
             .limit(pageSize)
             .toArray()
+
 
         const itemUser: PublicUser[] = findForUser.map(el => ({
             id: el._id.toString(),
