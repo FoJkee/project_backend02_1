@@ -15,16 +15,17 @@ export const repositoryUser = {
 
         // const filter: Filter<UserDbType> = ({ login: { $regex: searchLoginTerm, $options: 'i'}} ||
         //     { email: { $regex: searchEmailTerm, $options: "i" }})
-        const filter: Filter<UserDbType> = []
+
+
+        const filter: Filter<UserDbType> = {}
 
         if (searchLoginTerm || searchEmailTerm) {
-
+            filter.$or = []
             if (searchLoginTerm) {
-                filter.push({login: {$regex: searchLoginTerm, $options: 'i'}})
-
+                filter.$or.push({login: {$regex: searchLoginTerm, $options: 'i'}})
             }
             if (searchEmailTerm) {
-                filter.push({email: {$regex: searchEmailTerm, $options: "i"}})
+                filter.$or.push({email: {$regex: searchEmailTerm, $options: "i"}})
             }
 
         }
